@@ -1,0 +1,174 @@
+// MongoDB
+// Replication:
+// - master-slave (two async)
+Table uploads {
+  id varchar [primary key]
+  url varchar
+  bucket varchar
+  type enum
+  size integer
+  is_block bool
+  created_at timestamp
+  updated_at timestamp
+}
+
+// MongoDB
+// Replication:
+// master-slave (one sync + async)
+Table users {
+  id varchar [primary key]
+  username varchar
+  first_name varchar
+  last_name varchar
+  phone varchar
+  city_id int
+  email varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Neo4j
+// Replication:
+// master-slave (sync)
+Table friendships {
+  id varchar
+  requested_user_id varchar
+  directed_user_id varchar
+  status_friendship enum
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (async)
+Table user_upload {
+  id varchar
+  user_id varchar
+  file_id varchar
+  created_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (sync)
+Table post_upload {
+  id varchar
+  post_id varchar
+  file_id varchar
+  created_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (one sync + async)
+Table posts {
+  id varchar
+  content text
+  user_id varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (one sync + async)
+Table chats {
+  id varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (one sync + async)
+Table user_chat {
+  id varchar
+  user_id varchar
+  chat_id varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+// Tarantool
+// Replication:
+// master-slave (one sync + async)
+Table messages {
+  id varchar
+  chat_id varchar
+  content text
+  sender_user_id varchar
+  status_messages enum
+  created_at timestamp
+  delivery_at timestamp
+}
+
+// MongoDB
+// Replication:
+// - master-slave (async)
+Table cities {
+  id int
+  name varchar
+}
+
+// Neo4j
+// Replication:
+// master-slave (two async)
+Table comments {
+  id varchar
+  post_id varchar
+  user_id varchar
+  parent_id varchar
+  created_at timestamp
+}
+
+// key-value
+// Replication:
+// master-slave (async)
+Table likes {
+  post_id varchar
+  likes biginteger
+}
+
+enum status_messages {
+  read
+  send
+  delivery
+}
+
+enum status_friendship {
+  friend
+  subscriber
+  accepted
+  lovely
+}
+
+Ref: "friendships"."requested_user_id" < "users"."id"
+
+Ref: "friendships"."directed_user_id" < "users"."id"
+
+Ref: "uploads"."id" < "user_upload"."file_id"
+
+Ref: "users"."id" < "user_upload"."user_id"
+
+Ref: "posts"."id" < "post_upload"."post_id"
+
+Ref: "uploads"."id" < "post_upload"."file_id"
+
+Ref: "users"."id" < "posts"."user_id"
+
+Ref: "messages"."chat_id" < "chats"."id"
+
+Ref: "users"."id" < "user_chat"."user_id"
+
+Ref: "chats"."id" < "user_chat"."chat_id"
+
+Ref: "posts"."id" < "comments"."post_id"
+
+Ref: "users"."id" < "comments"."user_id"
+
+Ref: "comments"."id" < "comments"."parent_id"
+
+Ref: "likes"."post_id" < "posts"."id"
+
+Ref: "users"."city_id" - "cities"."id"
