@@ -1,0 +1,16 @@
+@startuml
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(userAlias, "Users", "Пользователи социальной сети")
+
+System(agwAlias, "API Gateway", "Прокся распределяющая трафик")
+Rel(userAlias, agwAlias, "Запросы к системе (просмотры постов, профилей и т.д.)")
+
+Container(socialNetworkAlias, "Социальная сеть", "Обобщенное обозначение всей системы")
+Rel(agwAlias, socialNetworkAlias, "Направление запроса на необходимый МС и т.д.")
+
+System(analyticsSystemAlias, "Аналитика", "Система для анализа и аудита")
+Rel(analyticsSystemAlias, socialNetworkAlias, "Получение данных аналитикой (push / pull модели)")
+Rel(socialNetworkAlias, analyticsSystemAlias, "Получение данных аналитикой (push / pull модели)")
+
+@enduml
